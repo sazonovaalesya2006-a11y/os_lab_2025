@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-I.
 
 # Цель all, которая собирает обе программы (Задание 3)
-all: sequential_min_max parallel_min_max
+all: sequential_min_max parallel_min_max run_sequential
 
 sequential_min_max : utils.o find_min_max.o utils.h find_min_max.h
 	$(CC) -o sequential_min_max find_min_max.o utils.o sequential_min_max.c $(CFLAGS)
@@ -16,5 +16,8 @@ utils.o : utils.h
 find_min_max.o : utils.h find_min_max.h
 	$(CC) -o find_min_max.o -c find_min_max.c $(CFLAGS)
 
+run_sequential: run_sequential.c
+	$(CC) -o run_sequential run_sequential.c $(CFLAGS)
+
 clean :
-	rm utils.o find_min_max.o sequential_min_max parallel_min_max
+	rm -f utils.o find_min_max.o sequential_min_max parallel_min_max run_sequential
