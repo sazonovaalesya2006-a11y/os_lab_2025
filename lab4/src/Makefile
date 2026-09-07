@@ -1,17 +1,10 @@
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -pthread
 
-# Цель по умолчанию: собрать обе программы
-all: parallel_min_max process_memory
+all: psum
 
-# Сборка parallel_min_max
-parallel_min_max: parallel_min_max.c find_min_max.c utils.c
-	$(CC) $(CFLAGS) -o parallel_min_max parallel_min_max.c find_min_max.c utils.c
+psum: parallel_sum.c sum_lib.c sum_lib.h utils.c utils.h
+	$(CC) $(CFLAGS) -o psum parallel_sum.c sum_lib.c utils.c
 
-# Сборка process_memory
-process_memory: process_memory.c
-	$(CC) $(CFLAGS) -o process_memory process_memory.c -w
-
-# Очистка
 clean:
-	rm -f parallel_min_max process_memory
+	rm -f psum
