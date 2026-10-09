@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y \
     fuse \
     && rm -rf /var/lib/apt/lists/*
 
+# Разрешить опцию allow_other для FUSE
+RUN echo "user_allow_other" >> /etc/fuse.conf
+
 COPY scripts/s3fs-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

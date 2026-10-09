@@ -38,7 +38,7 @@ services:
       AWS_ACCESS_KEY_ID: minioadmin
       AWS_SECRET_ACCESS_KEY: minioadmin123
     volumes:
-      - s3fs_mount:/mnt/s3:shared
+      - s3fs_mount:/mnt/s3
 
   # Демонстрационное приложение
   app:
@@ -48,7 +48,7 @@ services:
       - s3fs
     volumes:
       - hot_storage:/data/hot
-      - s3fs_mount:/data/warm:shared
+      - s3fs_mount:/data/warm
       - ./app:/app:ro
     working_dir: /app
     environment:
