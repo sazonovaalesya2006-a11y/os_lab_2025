@@ -1,0 +1,12 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    s3fs \
+    curl \
+    fuse \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY scripts/s3fs-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

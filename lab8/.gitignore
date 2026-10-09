@@ -7,3 +7,5 @@ htmlcov/
 *.sqlite3
 benchmark_results/
 *.png
+hot_storage/
+metadata.json
