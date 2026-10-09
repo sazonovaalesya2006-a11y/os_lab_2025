@@ -123,3 +123,38 @@ class FilesystemSmallFiles(BenchmarkBase):
                 os.remove(os.path.join(self.mountpoint, name))
             except FileNotFoundError:
                 pass
+
+class FilesystemMetadataOps(BenchmarkBase):
+    """stat + create + delete одного файла (200 раз)."""
+
+    def __init__(self, mountpoint: str):
+        super().__init__(storage="s3fs", workload="metadata_ops")
+        self.mountpoint = mountpoint
+        self.fixed_file = "metadata_fixed.txt"
+
+    def setup(self):
+        # Создаём файл, который будем stat-ить
+        with open(os.path.join(self.mountpoint, self.fixed_file), "wb") as f:
+            f.write(b"x")
+        self._idx = 0
+
+    def run_iteration(self) -> int:
+        if self._idx >= workloads.METADATA_OPS:
+            return 0
+        self._idx += 1
+        # 1 stat
+        os.stat(os.path.join(self.mountpoint, self.fixed_file))
+        # 2 create
+        tmp_name = f"meta_tmp_{self._idx}.txt"
+        tmp_path = os.path.join(self.mountpoint, tmp_name)
+        with open(tmp_path, "wb") as f:
+            f.write(b"x")
+        # 3 delete
+        os.remove(tmp_path)
+        return 3  # 3 операции метаданных
+
+    def cleanup(self):
+        try:
+            os.remove(os.path.join(self.mountpoint, self.fixed_file))
+        except FileNotFoundError:
+            pass

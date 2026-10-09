@@ -39,3 +39,6 @@ def small_files_workload():
         data = os.urandom(SMALL_SIZE)
         files.append((f"small_{i:04d}.bin", data))
     return files
+
+# Metadata Ops: 200 итераций stat+create+delete
+METADATA_OPS = 200

@@ -20,10 +20,12 @@ def main():
         filesystem.FilesystemSequentialRead(args.mountpoint),
         filesystem.FilesystemRandomIO(args.mountpoint),
         filesystem.FilesystemSmallFiles(args.mountpoint),
+        filesystem.FilesystemMetadataOps(args.mountpoint),
         native_s3.S3SequentialWrite(args.bucket, args.endpoint),
         native_s3.S3SequentialRead(args.bucket, args.endpoint),
         native_s3.S3RandomIO(args.bucket, args.endpoint),
         native_s3.S3SmallFiles(args.bucket, args.endpoint),
+        native_s3.S3MetadataOps(args.bucket, args.endpoint),
     ]
 
     results = []

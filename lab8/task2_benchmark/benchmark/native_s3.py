@@ -135,3 +135,35 @@ class S3SmallFiles(BenchmarkBase):
                 self.s3.delete_object(Bucket=self.bucket, Key=f"small/{name}")
             except Exception:
                 pass
+
+class S3MetadataOps(BenchmarkBase):
+    """head_object + put_object + delete_object (200 раз)."""
+
+    def __init__(self, bucket="benchmark", endpoint="http://localhost:9000"):
+        super().__init__(storage="boto3", workload="metadata_ops")
+        self.bucket = bucket
+        self.s3 = make_s3_client(endpoint)
+        self.fixed_key = "meta/metadata_fixed.txt"
+
+    def setup(self):
+        self.s3.put_object(Bucket=self.bucket, Key=self.fixed_key, Body=b"x")
+        self._idx = 0
+
+    def run_iteration(self) -> int:
+        if self._idx >= workloads.METADATA_OPS:
+            return 0
+        self._idx += 1
+        # 1 head
+        self.s3.head_object(Bucket=self.bucket, Key=self.fixed_key)
+        # 2 put
+        tmp_key = f"meta/meta_tmp_{self._idx}.txt"
+        self.s3.put_object(Bucket=self.bucket, Key=tmp_key, Body=b"x")
+        # 3 delete
+        self.s3.delete_object(Bucket=self.bucket, Key=tmp_key)
+        return 3
+
+    def cleanup(self):
+        try:
+            self.s3.delete_object(Bucket=self.bucket, Key=self.fixed_key)
+        except Exception:
+            pass
